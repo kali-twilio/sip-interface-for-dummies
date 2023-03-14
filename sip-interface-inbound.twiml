@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <Response>
+        <Dial answerOnBridge="true">
+            <Sip>
+kris1@kris.sip.us1.twilio.com
+            </Sip>
+        </Dial>
+</Response>

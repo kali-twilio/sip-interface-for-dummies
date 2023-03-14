@@ -1,0 +1,123 @@
+{
+  "description": "A New Flow",
+  "states": [
+    {
+      "name": "Trigger",
+      "type": "trigger",
+      "transitions": [
+        {
+          "event": "incomingMessage"
+        },
+        {
+          "next": "Gather",
+          "event": "incomingCall"
+        },
+        {
+          "event": "incomingConversationMessage"
+        },
+        {
+          "event": "incomingRequest"
+        },
+        {
+          "event": "incomingParent"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -120,
+          "y": -50
+        }
+      }
+    },
+    {
+      "name": "Gather",
+      "type": "gather-input-on-call",
+      "transitions": [
+        {
+          "next": "split_1",
+          "event": "keypress"
+        },
+        {
+          "event": "speech"
+        },
+        {
+          "event": "timeout"
+        }
+      ],
+      "properties": {
+        "voice": "Polly.Salli",
+        "speech_timeout": "auto",
+        "offset": {
+          "x": -260,
+          "y": 230
+        },
+        "loop": 1,
+        "finish_on_key": "#",
+        "say": "Please press 1 to speak with the restaurant host.",
+        "language": "en-US",
+        "stop_gather": true,
+        "gather_language": "en",
+        "profanity_filter": "true",
+        "timeout": 5
+      }
+    },
+    {
+      "name": "split_1",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "event": "noMatch"
+        },
+        {
+          "next": "connect_call_1",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to 1",
+              "arguments": [
+                "{{widgets.Gather.Digits}}"
+              ],
+              "type": "equal_to",
+              "value": "1"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{widgets.Gather.Digits}}",
+        "offset": {
+          "x": -410,
+          "y": 570
+        }
+      }
+    },
+    {
+      "name": "connect_call_1",
+      "type": "connect-call-to",
+      "transitions": [
+        {
+          "event": "callCompleted"
+        },
+        {
+          "event": "hangup"
+        }
+      ],
+      "properties": {
+        "sip_username": "",
+        "sip_endpoint": "sip:kris1@kris.sip.us1.twilio.com",
+        "offset": {
+          "x": 20,
+          "y": 850
+        },
+        "caller_id": "{{contact.channel.address}}",
+        "noun": "sip",
+        "sip_password": "",
+        "timeout": 30
+      }
+    }
+  ],
+  "initial_state": "Trigger",
+  "flags": {
+    "allow_concurrent_calls": true
+  }
+}
